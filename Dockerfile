@@ -8,6 +8,7 @@ RUN apt-get update && apt-get dist-upgrade -yqq && apt-get install -yqq \
 	less \
 	libidn11-dev \
 	liblua5.1-dev \
+	libnginx-mod-http-perl \
 	libssl-dev \
 	lua-bitop \
 	lua-dbi-mysql \
@@ -55,6 +56,10 @@ RUN mkdir -p /usr/src && tar -xzf /prosody.tar.gz -C /usr/src && cd /usr/src/pro
 RUN hg clone 'https://hg.prosody.im/prosody-modules/' /usr/src/prosody-modules
 RUN mkdir -p /usr/lib/prosody/modules-extra
 RUN for p in ${EXTRA_PLUGINS}; do ln -s "/usr/src/prosody-modules/mod_$p" "/usr/lib/prosody/modules-extra/mod_$p"; done
+
+RUN mkdir -p /usr/local/lib/perl
+RUN curl https://raw.githubusercontent.com/weiss/ngx_http_upload/master/upload.pm > /usr/local/lib/perl/upload.pm
+RUN sed -i "s#uri_prefix_components = 0#uri_prefix_components = 1#g" /usr/local/lib/perl/upload.pm
 
 COPY index.html /srv/www/
 COPY nginx.conf /etc/nginx/
