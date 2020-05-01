@@ -33,6 +33,7 @@ RUN ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime && \
 ARG PROSODY_VERSION=0.11.5
 ARG EXTRA_PLUGINS="\
 	blocking \
+	cloud_notify \
 	extdisco \
 	filter_chatstates \
 	http_upload_external \
