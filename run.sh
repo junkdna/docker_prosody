@@ -20,8 +20,10 @@ cp -r /certs/$LETSENCRYPT_HOST/* /etc/prosody/certs
 
 mkdir -p /run/prosody
 mkdir -p /var/log/prosody
+mkdir -p /srv/uploads
 
 chown -R $RUN_AS:$RUN_AS_GROUP /srv/www
+chown -R $RUN_AS:$RUN_AS_GROUP /srv/uploads
 chown -R $RUN_AS:$RUN_AS_GROUP /etc/prosody
 chown -R $RUN_AS:$RUN_AS_GROUP /run/prosody
 chown -R $RUN_AS:$RUN_AS_GROUP /var/log/prosody
