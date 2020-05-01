@@ -26,9 +26,9 @@ chown -R $RUN_AS:$RUN_AS_GROUP /etc/prosody
 chown -R $RUN_AS:$RUN_AS_GROUP /run/prosody
 chown -R $RUN_AS:$RUN_AS_GROUP /var/log/prosody
 
-sed -Eei "s/@JABBER_HOST@/$JABBER_HOST/g" /srv/www/index.html
-sed -Eei "s/@JABBER_HOST@/$JABBER_HOST/g" /etc/nginx/nginx.conf
-sed -i "s#it-is-secret#$HTTP_UPLOAD_SECRET#g" /usr/local/lib/perl/upload.pm
+sed -E -i -e "s/@JABBER_HOST@/$JABBER_HOST/g" /srv/www/index.html
+sed -E -i -e "s/@JABBER_HOST@/$JABBER_HOST/g" /etc/nginx/nginx.conf
+sed -E -i -e "s#it-is-secret#$HTTP_UPLOAD_SECRET#g" /usr/local/lib/perl/upload.pm
 
 if [[ -f /pre_exec_hook.sh ]]; then
 	/pre_exec_hook.sh $RUN_AS $RUN_AS_GROUP
