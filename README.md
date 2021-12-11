@@ -2,6 +2,13 @@
 ## Intro
 Lorem Ipsum ...
 
+## Docker secrets
+You can use docker secrets for the following variables:
+
+- RUN\_AS\_FILE
+- RUN\_AS\_GROUP\_FILE
+- HTTP\_UPLOAD\_SECRET\_FILE
+
 # Compose snippet
 Works in concert with `jwilder/docker-gen`, nginx-proxy, and `jrcs/letsencrypt-nginx-proxy-companion`
 
@@ -10,7 +17,7 @@ Works in concert with `jwilder/docker-gen`, nginx-proxy, and `jrcs/letsencrypt-n
     build:
       context: prosody
     image: repo-local/prosody:latest
-    container_name: prosody 
+    container_name: prosody
     depends_on:
       - database
       - nginx-proxy

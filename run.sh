@@ -1,15 +1,27 @@
 #!/bin/bash
 
+if [[ ! -z "$RUN_AS_FILE" ]]; then
+	RUN_AS=$(cat $RUN_AS_FILE)
+fi
+
 if [[ -z "$RUN_AS" ]]; then
 	RUN_AS=prosody
+fi
+
+if [[ ! -z "$RUN_AS_GROUP_FILE" ]]; then
+	RUN_AS_GROUP=$(cat $RUN_AS_GROUP_FILE)
 fi
 
 if [[ -z "$RUN_AS_GROUP" ]]; then
 	RUN_AS_GROUP=$RUN_AS
 fi
 
+if [[ ! -z "$HTTP_UPLOAD_SECRET_FILE" ]]; then
+	HTTP_UPLOAD_SECRET=$(cat $HTTP_UPLOAD_SECRET_FILE)
+fi
+
 if [[ -z "$HTTP_UPLOAD_SECRET" ]]; then
-    HTTP_UPLOAD_SECRET="it-is-secret-jfdsaJFS876"
+	HTTP_UPLOAD_SECRET="it-is-secret-jfdsaJFS876"
 fi
 
 sed -e "s/user \+nginx;/user $RUN_AS;/" -i /etc/nginx/nginx.conf
