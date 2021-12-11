@@ -9,7 +9,7 @@ if [[ -z "$RUN_AS_GROUP" ]]; then
 fi
 
 if [[ -z "$HTTP_UPLOAD_SECRET" ]]; then
-    HTTP_UPLOAD_SECRET="it-is-secret-jfdsaJFS876"
+	HTTP_UPLOAD_SECRET="it-is-secret-jfdsaJFS876"
 fi
 
 sed -e "s/user \+nginx;/user $RUN_AS;/" -i /etc/nginx/nginx.conf
