@@ -1,4 +1,4 @@
-FROM debian:stretch
+FROM debian:bullseye-slim
 MAINTAINER Tillmann Heidsieck <theidsieck@leenox.de>
 EXPOSE 80 5222 5269
 
