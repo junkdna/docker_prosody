@@ -31,7 +31,7 @@ RUN apt-get update && apt-get dist-upgrade -yqq && apt-get install -yqq \
 RUN ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime && \
 	dpkg-reconfigure --frontend noninteractive tzdata
 
-ARG PROSODY_VERSION=0.11.5
+ARG PROSODY_VERSION=0.11.10
 ARG EXTRA_PLUGINS="\
 	blocking \
 	cloud_notify \
