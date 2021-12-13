@@ -34,13 +34,16 @@ RUN ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime && \
 ARG PROSODY_VERSION=0.11.10
 ARG EXTRA_PLUGINS="\
 	blocking \
+	bookmarks \
 	cloud_notify \
 	extdisco \
+	external_services \
 	filter_chatstates \
 	http_upload_external \
 	smacks \
 	throttle_presence \
 	turncredentials \
+	vcard_muc \
 "
 
 RUN useradd -s /bin/bash -r -M -d /usr/lib/prosody /prosody
