@@ -1,6 +1,5 @@
-FROM debian:bullseye-slim
-MAINTAINER Tillmann Heidsieck <theidsieck@leenox.de>
-EXPOSE 80 5222 5269
+FROM debian:bullseye-slim as build
+LABEL org.opencontainers.image.authors="theidsieck@leenox.de,dominik.laton@web.de"
 
 RUN apt-get update && apt-get dist-upgrade -yqq && apt-get install -yqq \
 	curl \
@@ -46,8 +45,6 @@ ARG EXTRA_PLUGINS="\
 	vcard_muc \
 "
 
-RUN useradd -s /bin/bash -r -M -d /usr/lib/prosody /prosody
-
 RUN curl https://prosody.im/downloads/source/prosody-${PROSODY_VERSION}.tar.gz > /prosody.tar.gz
 
 # TODO verify source, but where is the key?!
@@ -57,12 +54,52 @@ RUN curl https://prosody.im/downloads/source/prosody-${PROSODY_VERSION}.tar.gz >
 
 RUN mkdir -p /usr/src && tar -xzf /prosody.tar.gz -C /usr/src && cd /usr/src/prosody-${PROSODY_VERSION} && ./configure --prefix=/usr && make && make install
 RUN hg clone 'https://hg.prosody.im/prosody-modules/' /usr/src/prosody-modules
-RUN mkdir -p /usr/lib/prosody/modules-extra
-RUN for p in ${EXTRA_PLUGINS}; do ln -s "/usr/src/prosody-modules/mod_$p" "/usr/lib/prosody/modules-extra/mod_$p"; done
+RUN mkdir -p /out/prosody/usr/bin
+RUN mkdir -p /out/prosody/usr/lib
+RUN mkdir -p /out/prosody/etc
+RUN cp /usr/bin/prosody* /out/prosody/usr/bin/
+RUN cp -r /usr/lib/prosody /out/prosody/usr/lib
+RUN cp -r /etc/prosody /out/prosody/etc
+RUN mkdir -p /out/prosody/usr/lib/prosody/modules-extra
+RUN for p in ${EXTRA_PLUGINS}; do cp -r "/usr/src/prosody-modules/mod_$p" "/out/prosody/usr/lib/prosody/modules-extra"; done
 
 RUN mkdir -p /usr/local/lib/perl
 RUN curl https://raw.githubusercontent.com/weiss/ngx_http_upload/master/upload.pm > /usr/local/lib/perl/upload.pm
 RUN sed -i "s#uri_prefix_components = 0#uri_prefix_components = 1#g" /usr/local/lib/perl/upload.pm
+RUN mkdir -p /out/prosody/usr/local/lib/perl
+RUN cp /usr/local/lib/perl/upload.pm /out/prosody/usr/local/lib/perl
+
+
+FROM debian:bullseye-slim
+LABEL org.opencontainers.image.authors="theidsieck@leenox.de,dominik.laton@web.de"
+EXPOSE 80 5222 5269
+
+RUN apt-get update && apt-get dist-upgrade -yqq && apt-get install -yqq \
+	curl \
+	libidn11 \
+	libnginx-mod-http-perl \
+	lua-bitop \
+	lua-dbi-mysql \
+	lua-dbi-postgresql \
+	lua-dbi-sqlite3 \
+	lua-event \
+	lua-expat \
+	lua-filesystem \
+	lua-sec \
+	lua-socket \
+	lua5.1 \
+	nginx-extras \
+	procps \
+	ssmtp \
+	supervisor
+
+
+RUN ln -sf /usr/share/zoneinfo/Europe/Berlin /etc/localtime && \
+	dpkg-reconfigure --frontend noninteractive tzdata
+
+RUN useradd -s /bin/bash -r -M -d /usr/lib/prosody /prosody
+
+COPY --from=build /out/prosody /
 
 COPY index.html /srv/www/
 COPY nginx.conf /etc/nginx/
